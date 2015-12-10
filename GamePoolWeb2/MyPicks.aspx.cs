@@ -71,7 +71,7 @@ namespace GamePoolWeb2
 
             //default sort is by confidence
             //if we are locked, sort by date time
-            if (m_IsLocked)
+            if (m_IsLocked || AutoSort.Checked)
             {
                 m_UserGames.Sort(new UserGameByDateTimeComparer());
             }
@@ -97,8 +97,20 @@ namespace GamePoolWeb2
 
         protected async void Save_Click(object sender, ImageClickEventArgs e)
         {
-            Repository m_Repository = new Repository();
-            await m_Repository.UpdateUserGames(m_UserGames);
+            ErrorMessage.Visible = false;
+            //make sure there aren't any games with the same confidence
+            if (m_UserGames
+                .GroupBy(item => item.Confidence)
+                .Where(grp => grp.Count() > 1)
+                .ToList().Count > 0)
+            {
+                ErrorMessage.Visible = true;
+            }
+            else
+            {
+                Repository m_Repository = new Repository();
+                await m_Repository.UpdateUserGames(m_UserGames);
+            }
         }
 
         protected async void RefreshButton_Click(object sender, EventArgs e)
@@ -113,12 +125,18 @@ namespace GamePoolWeb2
 
         public bool DownVisible(object obj)
         {
+            //if worksheet mode, always false
+            if (AutoSort.Checked)
+                return false;
             UserGame userGame = (UserGame) obj;
             return (userGame.Confidence != 1) ? true : false;
         }
 
         public bool UpVisible(object obj)
         {
+            //if worksheet mode, always false
+            if (AutoSort.Checked)
+                return false;
             UserGame userGame = (UserGame)obj;
             return (userGame.Confidence != m_UserGames.Count) ? true : false;
         }
@@ -247,7 +265,7 @@ namespace GamePoolWeb2
             {
                 //is this within the range of valid values 1 through... 39 for now
                 //TODO
-                if ((newValue >= 1) && (newValue <= 39))
+                if ((newValue >= 1) && (newValue <= 41))
                     return true;
             }
             return false;
@@ -262,8 +280,11 @@ namespace GamePoolWeb2
                 //moving up
                 for (int i = matchUserGame.Confidence + 1; i <= newConfidence; i++)
                 {
-                    UserGame match = m_UserGames.Single(item => item.Confidence == i);
-                    match.Confidence--;
+                    if (!AutoSort.Checked)
+                    {
+                        UserGame match = m_UserGames.Single(item => item.Confidence == i);
+                        match.Confidence--;
+                    }
                 }
                 matchUserGame.Confidence = newConfidence;
             }
@@ -272,15 +293,21 @@ namespace GamePoolWeb2
                 //moving down
                 for (int i = matchUserGame.Confidence - 1; i >= newConfidence; i--)
                 {
-                    UserGame match = m_UserGames.Single(item => item.Confidence == i);
-                    match.Confidence++;
+                    if (!AutoSort.Checked)
+                    {
+                        UserGame match = m_UserGames.Single(item => item.Confidence == i);
+                        match.Confidence++;
+                    }
                 }
 
                 matchUserGame.Confidence = newConfidence;
             }
             //now, sort the list
-            m_UserGames.Sort((s1, s2) => s1.Confidence.CompareTo(s2.Confidence));
-            m_UserGames.Reverse();
+            if (!AutoSort.Checked)
+            {
+                m_UserGames.Sort((s1, s2) => s1.Confidence.CompareTo(s2.Confidence));
+                m_UserGames.Reverse();
+            }
             DataList1.EditItemIndex = -1;
         }
 
@@ -314,5 +341,9 @@ namespace GamePoolWeb2
             m_UserGames.Reverse();
         }
 
+        protected  void AutoSort_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshButton_Click(sender, e);
+        }
     }
 }

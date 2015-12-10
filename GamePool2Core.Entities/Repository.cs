@@ -15,8 +15,8 @@ namespace GamePool2Core.Entities
 
         //Mobile Service Client reference
         private MobileServiceClient m_MobileService = new MobileServiceClient(
-            "https://gamepool2.azure-mobile.net/",
-            "nOyYWFcVzwgFXXvTLNQVaQFQSxBzCM80"
+            "https://gamepool3.azure-mobile.net/",
+            "teadDZScRlKfHQNQVYOZrvTONHYFUV74"
             );
 
         public Repository()

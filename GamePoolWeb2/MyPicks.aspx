@@ -5,9 +5,13 @@
     <h2><%: Title %></h2>
     <h3>
         <asp:Label runat="server" ID="GamesLeftToPick"></asp:Label> 
+        <br />
+        <asp:Label runat="server" ID="ErrorMessage" ForeColor="Red" Visible ="False">Unable to save. There is a duplicate confidence score</asp:Label> 
     </h3>
     <asp:Button runat="server" Text="Refresh" OnClick="RefreshButton_Click"/>
     <asp:Button runat="server" Text="Save Changes" OnClick="SaveButton_Click"/><%--<asp:ImageButton runat="server" ImageUrl="Images\disk_blue.png" OnClick="Save_Click" />--%>
+    <br />
+    <asp:CheckBox runat="server" AutoPostBack="true" Text="Worksheet Mode" ID="AutoSort" Checked="true" OnCheckedChanged="AutoSort_CheckedChanged" />
     <asp:DataList ID="DataList1" runat="server" OnItemCommand="DataList_Command" >
         <AlternatingItemStyle BackColor="LightBlue"></AlternatingItemStyle>
         <EditItemTemplate>
