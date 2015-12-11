@@ -21,6 +21,9 @@ namespace GamePoolWeb2
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            ErrorMessage.Visible = false;
+            ZeroErrorMessage.Visible = false;
+
             if (Request.Cookies["UserName"] == null)
                 Response.Redirect("Account/Login.aspx", false);
             else
@@ -47,6 +50,28 @@ namespace GamePoolWeb2
 
             //GridView1.DataSource = m_UserGames;
             //GridView1.DataBind();
+            if (IsPostBack)
+            {
+                //try to update confidence scores for worksheet mode (if exists)
+                if (IsWorksheetMode)
+                {
+                    foreach (UserGame game in m_UserGames)
+                    {
+                        string conf = Request[game.Id];
+                        int intconf;
+                        game.Confidence = 0;
+                        if (int.TryParse(conf, out intconf))
+                        {
+                            byte newConfidence;
+                            if (ValidConfidence(conf, out newConfidence))
+                            {
+                                game.Confidence = newConfidence;
+                            }
+                        }
+                    }
+                }
+
+            }
         }
 
         private async Task LoadData()
@@ -97,27 +122,27 @@ namespace GamePoolWeb2
 
         protected async void Save_Click(object sender, ImageClickEventArgs e)
         {
-            if (IsWorksheetMode)
-            {
-                foreach (UserGame game in m_UserGames)
-                {
-                    string conf = Request[game.Id];
-                    int intconf;
-                    game.Confidence = 0;
-                    if (int.TryParse(conf, out intconf))
-                    {
-                        byte newConfidence;
-                        if (ValidConfidence(conf, out newConfidence))
-                        {
-                            game.Confidence = newConfidence;
-                        }
-                    }
-                }
-            }
+            //if (IsWorksheetMode)
+            //{
+            //    foreach (UserGame game in m_UserGames)
+            //    {
+            //        string conf = Request[game.Id];
+            //        int intconf;
+            //        game.Confidence = 0;
+            //        if (int.TryParse(conf, out intconf))
+            //        {
+            //            byte newConfidence;
+            //            if (ValidConfidence(conf, out newConfidence))
+            //            {
+            //                game.Confidence = newConfidence;
+            //            }
+            //        }
+            //    }
+            //}
             //else
             {
-                ErrorMessage.Visible = false;
-                ZeroErrorMessage.Visible = false;
+                //ErrorMessage.Visible = false;
+                //ZeroErrorMessage.Visible = false;
                 //make sure there aren't any games with the same confidence
                 if (m_UserGames
                     .GroupBy(item => item.Confidence)
