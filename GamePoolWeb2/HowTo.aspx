@@ -17,6 +17,16 @@
 
         <h3><b>Change your Ranking Score...</b></h3>
         <ul id="list">
+            <li>
+                The default mode is 'Worksheet Mode'. In this mode, you must enter your confidence score for each game in the appropriate textbox.</br>
+                <asp:Image runat="server" ImageUrl="\Images\WorksheetConfidence.png" Height="70"  /></br>
+                After entering your confidence score for all the games, click <a href='#saveChanges'>here</a> to learn how to save your changes.
+            </li>
+            </br>
+            <strong>-- OR --</strong>
+            </br></br>
+            Unchecking the 'Worksheet Mode' checkbox enables movement of games as described below.</br>
+
             There are two ways to change your Ranking Score for a bowl game.<br/>
             
             <li>
@@ -36,7 +46,7 @@
                 <asp:Image runat="server" ImageUrl="\Images\blank square.png" Height="30" />                
             </li>
             <li>
-                Once updated, your list should look something like this. 
+                Once updated, your list should look something like this. </br>
                 <asp:Image runat="server" ImageUrl="\Images\MovedTo15.png" Height="210" /> <br/>
                 Note that each game must have a unique Ranking Score. When you move a game using the Edit link,
                 the website will re-calculate the other games to make room for your change.
@@ -44,8 +54,11 @@
                 <asp:Image runat="server" ImageUrl="\Images\blank square.png" Height="30" />                
             </li>                
         </ul>
-
-        <h3><b>Save your changes</b></h3>
+        <div id="saveChanges">
+            </br>
+            </br>
+        </div>
+        <h3 ><b>Save your changes</b></h3>
         <ul>
             When ready, be sure to save your changes. Click the Save Changes button at the top of the <a href="\MyPicks.aspx">My Picks</a> page.
             <br/>

@@ -97,20 +97,46 @@ namespace GamePoolWeb2
 
         protected async void Save_Click(object sender, ImageClickEventArgs e)
         {
-            ErrorMessage.Visible = false;
-            //make sure there aren't any games with the same confidence
-            if (m_UserGames
-                .GroupBy(item => item.Confidence)
-                .Where(grp => grp.Count() > 1)
-                .ToList().Count > 0)
+            if (IsWorksheetMode)
             {
-                ErrorMessage.Visible = true;
+                foreach (UserGame game in m_UserGames)
+                {
+                    string conf = Request[game.Id];
+                    int intconf;
+                    game.Confidence = 0;
+                    if (int.TryParse(conf, out intconf))
+                    {
+                        byte newConfidence;
+                        if (ValidConfidence(conf, out newConfidence))
+                        {
+                            game.Confidence = newConfidence;
+                        }
+                    }
+                }
             }
-            else
+            //else
             {
-                Repository m_Repository = new Repository();
-                await m_Repository.UpdateUserGames(m_UserGames);
+                ErrorMessage.Visible = false;
+                ZeroErrorMessage.Visible = false;
+                //make sure there aren't any games with the same confidence
+                if (m_UserGames
+                    .GroupBy(item => item.Confidence)
+                    .Where(grp => grp.Count() > 1)
+                    .ToList().Count > 0)
+                {
+                    ErrorMessage.Visible = true;
+                }
+                else if (m_UserGames.Any(item => item.Confidence == 0))
+                {
+                    ZeroErrorMessage.Visible = true;
+                }
+                else
+                {
+                    Repository m_Repository = new Repository();
+                    await m_Repository.UpdateUserGames(m_UserGames);
+                }
             }
+
         }
 
         protected async void RefreshButton_Click(object sender, EventArgs e)
@@ -139,6 +165,11 @@ namespace GamePoolWeb2
                 return false;
             UserGame userGame = (UserGame)obj;
             return (userGame.Confidence != m_UserGames.Count) ? true : false;
+        }
+
+        public bool IsWorksheetMode
+        {
+            get { return AutoSort.Checked; }
         }
 
         public bool IsHomeSelected(object obj)
