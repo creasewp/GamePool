@@ -16,6 +16,8 @@ namespace GamePool2Core.Entities
 
         public bool IsEligible { get; set; }
         public int PoolScore { get; set; }
+        public int LostPoints { get; set; }
+        public int PossiblePoints { get; set; }
 
     }
 }

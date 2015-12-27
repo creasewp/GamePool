@@ -165,28 +165,56 @@ namespace GamePoolWeb2
             //get all users, get all user games, get all games
             Repository m_Repository = new Repository();
             IList<Game> games = await m_Repository.GetGames();
+            foreach (Game game in games)
+            {
+                game.HomeSelectedCount = 0;
+                game.AwaySelectedCount = 0;
+            }
+
             IList<User> poolUsers = await m_Repository.GetPoolUsers(string.Empty);//TODO need all users if more than one pool
             foreach (User user in poolUsers)
             {
                 int score = 0;
+                int lostPoints = 0;
+                int possiblePoints = 0;
                 //get user games
                 IList<UserGame> userGames = await m_Repository.GetUserGames(user.Id);
                 foreach (UserGame userGame in userGames)
                 {
                     //find the matching game
                     Game match = games.Single(item => item.Id == userGame.GameId);
+
+                    if (userGame.WinnerTeamId == match.HomeTeamId)
+                        match.HomeSelectedCount++;
+                    else if (userGame.WinnerTeamId == match.AwayTeamId)
+                        match.AwaySelectedCount++;
+
                     if (match.IsGameFinished)
                     {
-                        //did the user guess right?
                         string winningTeamId = (match.HomeScore > match.AwayScore) ? match.HomeTeamId : match.AwayTeamId;
                         if (userGame.WinnerTeamId == winningTeamId)
                         {
                             score += userGame.Confidence;
                         }
+                        else
+                        {
+                            lostPoints += userGame.Confidence;
+                        }
+                    }
+                    else
+                    {
+                        possiblePoints += userGame.Confidence;
                     }
                 }
                 user.PoolScore = score;
+                user.LostPoints = lostPoints;
+                user.PossiblePoints = possiblePoints;
                 m_Repository.UpdateUser(user);
+            }
+            //update games
+            foreach (Game game in games)
+            {
+                m_Repository.UpdateGame(game);
             }
         }
 

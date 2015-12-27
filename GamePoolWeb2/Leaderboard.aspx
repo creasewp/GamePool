@@ -22,6 +22,14 @@
                 <HeaderStyle HorizontalAlign="Center" Width="60"></HeaderStyle>
                 <ItemStyle HorizontalAlign="Center" Width="60"></ItemStyle>
             </asp:BoundField>    
+            <asp:BoundField DataField="LostPoints" HeaderText="Lost" ReadOnly="true" >
+                <HeaderStyle HorizontalAlign="Center" Width="60"></HeaderStyle>
+                <ItemStyle HorizontalAlign="Center" Width="60"></ItemStyle>
+            </asp:BoundField>    
+            <asp:BoundField DataField="PossiblePoints" HeaderText="Possible" ReadOnly="true" >
+                <HeaderStyle HorizontalAlign="Center" Width="60"></HeaderStyle>
+                <ItemStyle HorizontalAlign="Center" Width="60"></ItemStyle>
+            </asp:BoundField>    
         </Columns>
     </asp:GridView>
                 

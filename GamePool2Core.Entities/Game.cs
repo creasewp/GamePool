@@ -23,5 +23,7 @@ namespace GamePool2Core.Entities
         public string GameDateTime { get; set; }
         public string Network { get; set; }
         public bool IsGameFinished{ get; set; }
+        public int HomeSelectedCount { get; set; }
+        public int AwaySelectedCount { get; set; }
     }
 }

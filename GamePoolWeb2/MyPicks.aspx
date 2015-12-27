@@ -57,6 +57,7 @@
                     <td style="text-align: right">                        
                         <asp:Label ID="Label1" runat="server" Text='<%# Eval("Game.Network") %>' />
                     </td>
+                    <td></td>
                 </tr>               
                 <asp:PlaceHolder runat="server" Visible='<%# IsNotLocked(Container.DataItem) %>'>
                     <tr>
@@ -96,27 +97,32 @@
                 <asp:PlaceHolder runat="server" Visible='<%# IsLocked(Container.DataItem) %>'>
                     <tr >
                         <td>
-                            <asp:Label runat="server" Text='<%# Eval("Game.HomeTeam.Description") %>' ForeColor='<%# GetHomeScoreColor(Container.DataItem) %>'></asp:Label>                        
+                            <asp:Label runat="server" Text='<%# Eval("Game.HomeTeam.Description") %>' ForeColor='<%# GetHomeScoreColor(Container.DataItem) %>'></asp:Label>                            
                         </td>
                         <td width="10%">
                             <asp:Label Font-Bold="True" ID="Label6" runat="server" Visible='<%# Eval("Game.IsGameFinished") %>' Text='<%# Eval("Game.HomeScore") %>' ForeColor='<%# GetHomeScoreColor(Container.DataItem) %>'/>
-                            <asp:Image runat="server" ImageUrl="Images\ic_thumb_up.png" Visible='<%# IsHomeSelected(Container.DataItem) %>' />
-                        </td>
-                            
-                        <td width="20%" rowspan="2" style="text-align: right">
+                            <asp:Image runat="server" ImageUrl="Images\ic_thumb_up.png" Visible='<%# IsHomeSelected(Container.DataItem) %>' />                            
+                        </td>                            
+                        <td width="20%" rowspan="3" style="text-align: right">
                             My Rank: <asp:Label runat="server" Text='<%# Eval("Confidence") %>'></asp:Label> <br />
                             <b>My Points: <asp:Label runat="server" Text='<%# GetUserGameScore(Container.DataItem) %>' ForeColor='<%# GetUserGameScoreColor(Container.DataItem) %>'></asp:Label></b>
+                        </td>
+                        <td align="right" width="10%">
+                            <%--"Game.HomeSelectedCount"--%>
+                            <asp:Label runat="server" Text='<%# GetGamePercent(Eval("Game.HomeSelectedCount")) %>' ForeColor='<%# GetHomeScoreColor(Container.DataItem) %>' ToolTip="Percentage of players who picked this team"></asp:Label>
                         </td>
                     </tr>
                     <tr style="visibility: <%# IsNotLocked(Container.DataItem) %>">
                         <td>
-                            <asp:Label runat="server" Text='<%# Eval("Game.AwayTeam.Description") %>' ForeColor='<%# GetAwayScoreColor(Container.DataItem) %>'></asp:Label>                        
+                            <asp:Label runat="server" Text='<%# Eval("Game.AwayTeam.Description") %>' ForeColor='<%# GetAwayScoreColor(Container.DataItem) %>'></asp:Label>                                                    
                         </td>
                         <td>
                             <asp:Label Font-Bold="True" ID="Label7" runat="server" Visible='<%# Eval("Game.IsGameFinished") %>' Text='<%# Eval("Game.AwayScore") %>' ForeColor='<%# GetAwayScoreColor(Container.DataItem) %>'/>
                             <asp:Image runat="server" ImageUrl="Images\ic_thumb_up.png" Visible='<%# IsAwaySelected(Container.DataItem) %>' />
                         </td>
-                            
+                        <td align="right" >
+                            <asp:Label runat="server" Text='<%# GetGamePercent(Eval("Game.AwaySelectedCount")) %>' ForeColor='<%# GetAwayScoreColor(Container.DataItem) %>' ToolTip="Percentage of players who picked this team"></asp:Label>
+                        </td>
                     </tr>
                 </asp:PlaceHolder>
             </table>            

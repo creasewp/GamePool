@@ -16,7 +16,8 @@ namespace GamePoolWeb2
     {
 
         private List<UserGame> m_UserGames;
-        private List<Game> m_Games = new List<Game>(); 
+        private List<Game> m_Games = new List<Game>();
+        private int userCount;
         private bool m_IsLocked = false;
 
         protected async void Page_Load(object sender, EventArgs e)
@@ -46,6 +47,8 @@ namespace GamePoolWeb2
 
                     //m_UserGames.Sort();
                 }
+                var users = await m_Repository.GetPoolUsers(string.Empty);
+                userCount = users.Count();
             }
 
             //GridView1.DataSource = m_UserGames;
@@ -253,6 +256,14 @@ namespace GamePoolWeb2
                 result = (match.HomeScore < match.AwayScore) ? Color.Green : Color.Red;
             }
             return result;
+        }
+
+        public string GetGamePercent(object obj)
+        {
+            //how many players?
+            int count = (int)obj;
+
+            return ((int)(((double)count / (double)userCount) * 100)).ToString() + "%";
         }
 
         public string GetUserGameScore(object obj)
