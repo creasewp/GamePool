@@ -63,7 +63,7 @@ namespace GamePoolWeb2
             editUser.UserName = ((TextBox) (row.Cells[2].Controls[0])).Text;
             editUser.IsLocked = Convert.ToBoolean(((TextBox)(row.Cells[3].Controls[0])).Text);
             editUser.IsEligible = Convert.ToBoolean(((TextBox)(row.Cells[4].Controls[0])).Text);
-            editUser.PoolScore = Convert.ToByte(((TextBox)(row.Cells[5].Controls[0])).Text);
+            editUser.PoolScore = Convert.ToInt32(((TextBox)(row.Cells[5].Controls[0])).Text);
 
             // update the selected team in the repository
             Repository m_Repository = new Repository();

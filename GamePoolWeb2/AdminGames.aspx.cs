@@ -177,6 +177,9 @@ namespace GamePoolWeb2
                 int score = 0;
                 int lostPoints = 0;
                 int possiblePoints = 0;
+                double winPercent = 0;
+                int gamesCorrect = 0;
+                int gamesIncorrect = 0;
                 //get user games
                 IList<UserGame> userGames = await m_Repository.GetUserGames(user.Id);
                 foreach (UserGame userGame in userGames)
@@ -195,10 +198,12 @@ namespace GamePoolWeb2
                         if (userGame.WinnerTeamId == winningTeamId)
                         {
                             score += userGame.Confidence;
+                            gamesCorrect++;
                         }
                         else
                         {
                             lostPoints += userGame.Confidence;
+                            gamesIncorrect++;
                         }
                     }
                     else
@@ -209,6 +214,7 @@ namespace GamePoolWeb2
                 user.PoolScore = score;
                 user.LostPoints = lostPoints;
                 user.PossiblePoints = possiblePoints;
+                user.WinPercent = 100 * Math.Round((double)((double)gamesCorrect / (double)(gamesCorrect + gamesIncorrect)), 3);
                 m_Repository.UpdateUser(user);
             }
             //update games

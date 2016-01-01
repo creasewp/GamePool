@@ -18,6 +18,7 @@ namespace GamePool2Core.Entities
         public int PoolScore { get; set; }
         public int LostPoints { get; set; }
         public int PossiblePoints { get; set; }
+        public double WinPercent { get; set; }
 
     }
 }
